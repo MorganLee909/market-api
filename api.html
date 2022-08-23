@@ -36,11 +36,12 @@
                 <h2><span class="method">POST:</span>/api/vendor</h2>
                 <p>Creates a new vendor</p>
                 <pre><code>body = {
-    name (String): vendor name
-    email (String): vendor email
-    password (String): vendor password
-    confirmPassword (String): confirmation password
-    description (String): vendor description
+    name (String, required): vendor name
+    email (String, required): vendor email
+    password (String, required): vendor password
+    confirmPassword (String, required): confirmation password
+    description (String, optional): vendor description
+    address: (String, optional): vendor address, will be used for searching
 }</code></pre>
                 <code>response = Vendor</code>
             </div>
@@ -84,6 +85,7 @@
     description (String): vendor description
     items (Array): array of items that the vendor has available for sale
     createdDate (Date): date of creation of vendor on the website
+    address (Object): contains various address data
 }</code></pre>
             </div>            
         </div>

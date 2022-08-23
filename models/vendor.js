@@ -29,11 +29,28 @@ const VendorSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    address: {
+        streetNumber: String,
+        road: String,
+        city: String,
+        county: String,
+        state: String,
+        country: String,
+        zipCode: String,
+        full: String
+    },
+    location: {
+        type: {type: String},
+        coordinates: [],
+        required: false
+    },
     createdDate: {
         type: Date,
         required: true,
         default: new Date()
     }
 });
+
+VendorSchema.index({location: "2dsphere"});
 
 module.exports = mongoose.model("vendor", VendorSchema);

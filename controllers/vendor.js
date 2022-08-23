@@ -2,6 +2,7 @@ const Vendor = require("../models/vendor.js");
 
 const helper = require("../helper.js");
 const bcrypt = require("bcryptjs");
+const axios = require("axios");
 
 module.exports = {
     /*
@@ -9,9 +10,10 @@ module.exports = {
     req.body = {
         name: String, required
         email: email, required
-        password: String, required,
-        confirmPass: String, required,
+        password: String, required
+        confirmPass: String, required
         description: String, optional
+        address: String, optional
     }
     */
     create: function(req, res){
@@ -22,6 +24,21 @@ module.exports = {
         Vendor.findOne({email: email})
             .then((vendor)=>{
                 if(vendor !== null) throw "email";
+
+                if(req.body.address){
+                    const apiUrl = "https://api.geocod.io/v1.6/geocode";
+                    const address = req.body.address;
+                    const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
+                    return axios({
+                        method: "get",
+                        url: fullUrl
+                    });
+                }else{
+                    return null;
+                }
+            })
+            .then((geoData)=>{
+                
 
                 let salt = bcrypt.genSaltSync(10);
                 let hash = bcrypt.hashSync(req.body.password, salt);
@@ -34,6 +51,29 @@ module.exports = {
                     session: helper.generateSession(25),
                     items: []
                 });
+
+                if(geoData !== null){
+                    let result = geoData.data.results[0];
+                    let lat = result.location.lat;
+                    let lng = result.location.lng;
+                    let comps = result.address_components;
+
+                    newVendor.address = {
+                        streetNumber: comps.number,
+                        road: comps.formatted_street,
+                        city: comps.city,
+                        county: comps.county,
+                        state: comps.state,
+                        country: comps.country,
+                        zipCode: comps.zip,
+                        full: result.formatted_address
+                    };
+
+                    newVendor.location = {
+                        type: "Point",
+                        coordinates: [lat, lng]
+                    };
+                }
 
                 return newVendor.save();
             })
