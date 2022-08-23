@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>API Documentation | Market</title>
+        <link rel="stylesheet" href="/api.css">
+    </head>
+    <body>
+        <div class="contents">
+            <h1>Market</h1>
+            <h2>Routes</h2>
+            <h3>Vendor</h3>
+            <a href="#retrieveVendorRoute">Retrieve</a>
+            <a href="#createVendorRoute">Create</a>
+            <a href="#updateVendorRoute">Update</a>
+            <a href="#loginVendorRoute">Login</a>
+            <a href="#logoutVendorRoute">Logout</a>
+            <h2>Models</h2>
+            <a href="#vendorModel">Vendor</a>
+        </div>
+
+        <div style="width:350px;"></div>
+
+        <div class="docs">
+            <h1>API Docs for Market</h1>
+
+            <h1>Routes</h1>
+
+            <div id="retrieveVendorRoute" class="route">
+                <h2><span class="method">GET:</span>/api/vendor/{{Vendor ID}}</h2>
+                <p>Retrieve the data for a single Vendor. Private data will only be included if data is for the currently logged in user.</p>
+                <code>response = Vendor</code>
+            </div>
+
+            <div id="createVendorRoute" class="route">
+                <h2><span class="method">POST:</span>/api/vendor</h2>
+                <p>Creates a new vendor</p>
+                <pre><code>body = {
+    name (String): vendor name
+    email (String): vendor email
+    password (String): vendor password
+    confirmPassword (String): confirmation password
+    description (String): vendor description
+}</code></pre>
+                <code>response = Vendor</code>
+            </div>
+
+            <div id="updateVendorRoute" class="route">
+                <h2><span class="method">PUT:</span>/api/vendor</h2>
+                <p>Update vendor profile data</p>
+                <pre><code>body = {
+    vendor (String, required): vendor ID
+    name (String, optional): new vendor name
+    email (String, optional): new vendor email
+    description (String optional): new vendor description
+}</code></pre>
+                <code>response = Vendor</code>
+            </div>
+
+            <div id="loginVendorRoute" class="route">
+                <h2><span class="method">POST:</span>/api/vendor/login</h2>
+                <p>Vendor login route</p>
+                <pre><code>body = {
+    email (String): vendor email
+    password (String): vendor password
+}</code></pre>
+                <code>response = Vendor</code>
+            </div>
+
+            <div id="logoutVendorRoute" class="route">
+                <h2><span class="method">GET:</span>/api/vendor/logout</h2>
+                <p>Vendor logout route</p>
+                <code>response = {}</code>
+            </div>
+
+            <h1>Data</h1>
+
+            <div id="vendorModel" class="model">
+                <h2>Vendor</h2>
+                <p>A user that has items for sale on the site</p>
+                <pre><code>{
+    name (String): vendor name
+    email (String): vendor email
+    description (String): vendor description
+    items (Array): array of items that the vendor has available for sale
+    createdDate (Date): date of creation of vendor on the website
+}</code></pre>
+            </div>            
+        </div>
+    </body>
+</html>

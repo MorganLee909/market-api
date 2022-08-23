@@ -1,0 +1,81 @@
+:root{
+    --backColor: rgb(116, 139, 111);
+    --highlite: rgb(195, 203, 214);
+    --sidebar: rgb(42, 64, 61);
+    --title: rgb(208, 86, 99);
+}
+
+*{margin:0;padding:0;}
+
+body{
+    display: flex;
+    background: var(--backColor);
+    color: white;
+}
+
+.contents{
+    width: 350px;
+    background: var(--sidebar);
+    color: rgb(204, 204, 204);
+    padding: 15px;
+    height: 100vh;
+    position: fixed;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.contents a{
+    color: rgb(204, 204, 204);
+    text-decoration: none;
+    position: relative;
+    display: block;
+    margin: 10px;
+}
+
+.contents a:hover{
+    color: white;
+}
+
+.contents h2{
+    text-align: center;
+}
+
+.docs{
+    flex-basis: 250px;
+    flex-grow: 1;
+}
+
+h1{
+    text-align: center;
+}
+
+.route, .model{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.route h2, .model h2{
+    background: var(--title);
+    margin: 35px 0 10px 0;
+    padding: 5px 0;
+    width: 100%;
+}
+
+.route p, .model p{
+    margin-left: 35px;
+    font-size: 16px;
+}
+
+.method{
+    margin-right: 15px;
+}
+
+code{
+    display: inline-block;
+    margin: 10px 35px;
+    padding: 15px;
+    background: var(--highlite);
+    color: black;
+    font-size: 16px;
+}
