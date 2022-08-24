@@ -48,6 +48,15 @@ const VendorSchema = mongoose.Schema({
         type: Date,
         required: true,
         default: new Date()
+    },
+    publicData: {
+        streetNumber: Boolean,
+        road: Boolean,
+        city: Boolean,
+        county: Boolean,
+        state: Boolean,
+        email: Boolean,
+        searchable: Boolean
     }
 });
 

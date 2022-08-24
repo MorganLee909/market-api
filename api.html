@@ -13,6 +13,7 @@
             <a href="#retrieveVendorRoute">Retrieve</a>
             <a href="#createVendorRoute">Create</a>
             <a href="#updateVendorRoute">Update</a>
+            <a href="#updatePublicDataRoute">Update Public Data</a>
             <a href="#loginVendorRoute">Login</a>
             <a href="#logoutVendorRoute">Logout</a>
             <h2>Models</h2>
@@ -27,13 +28,13 @@
             <h1>Routes</h1>
 
             <div id="retrieveVendorRoute" class="route">
-                <h2><span class="method">GET:</span>/api/vendor/{{Vendor ID}}</h2>
+                <h2><span class="method">GET:</span>/vendor/{{Vendor ID}}</h2>
                 <p>Retrieve the data for a single Vendor. Private data will only be included if data is for the currently logged in user.</p>
                 <code>response = Vendor</code>
             </div>
 
             <div id="createVendorRoute" class="route">
-                <h2><span class="method">POST:</span>/api/vendor</h2>
+                <h2><span class="method">POST:</span>/vendor</h2>
                 <p>Creates a new vendor</p>
                 <pre><code>body = {
     name (String, required): vendor name
@@ -47,7 +48,7 @@
             </div>
 
             <div id="updateVendorRoute" class="route">
-                <h2><span class="method">PUT:</span>/api/vendor</h2>
+                <h2><span class="method">PUT:</span>/vendor</h2>
                 <p>Update vendor profile data</p>
                 <pre><code>body = {
     vendor (String, required): vendor ID
@@ -59,8 +60,24 @@
                 <code>response = Vendor</code>
             </div>
 
+            <div id="updatePublicDataRoute" class="route">
+                <h2><span class="method">PUT:</span>/vendor/public</h2>
+                <p>Update vendor's data that is displayed to the public</p>
+                <pre><code>body = {
+    vendor (String, required): vendor ID
+    streetNumber (Boolean, optional): public display status of street number
+    road (Boolean, optional): public display status of road
+    city (Boolean, optional): public display status of city
+    county (Boolean, optional): public display status of county
+    state (Boolean, optional): public display status of state
+    email (Boolean, optional): public display status of email
+    searchable (Boolean, optional): if true, users can find vendor by searching
+}</code></pre>
+                <code>response = Vendor</code>
+            </div>
+
             <div id="loginVendorRoute" class="route">
-                <h2><span class="method">POST:</span>/api/vendor/login</h2>
+                <h2><span class="method">POST:</span>/vendor/login</h2>
                 <p>Vendor login route</p>
                 <pre><code>body = {
     email (String): vendor email
@@ -70,7 +87,7 @@
             </div>
 
             <div id="logoutVendorRoute" class="route">
-                <h2><span class="method">GET:</span>/api/vendor/logout</h2>
+                <h2><span class="method">GET:</span>/vendor/logout</h2>
                 <p>Vendor logout route</p>
                 <code>response = {}</code>
             </div>
@@ -87,6 +104,7 @@
     items (Array): array of items that the vendor has available for sale
     createdDate (Date): date of creation of vendor on the website
     address (Object): contains various address data
+    publicData (Object): contains booleans that determine which private information the vendor wishes to share
 }</code></pre>
             </div>            
         </div>

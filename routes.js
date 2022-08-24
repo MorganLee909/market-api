@@ -8,6 +8,7 @@ module.exports = (app)=>{
     //VENDOR
     app.post("/vendor", vendor.create);
     app.put("/vendor", vendor.update);
+    app.put("/vendor/public", vendor.publicData);
     app.post("/vendor/login", vendor.login);
     app.get("/vendor/logout", vendor.logout);
     app.get("/vendor/:id", vendor.retrieve);

@@ -47,7 +47,16 @@ module.exports = {
                     password: hash,
                     description: req.body.description,
                     session: helper.generateSession(25),
-                    items: []
+                    items: [],
+                    publicData: {
+                        streetNumber: false,
+                        road: false,
+                        city: false,
+                        county: false,
+                        state: false,
+                        email: false,
+                        searchable: false
+                    }
                 });
 
                 if(geoData !== null){
@@ -66,6 +75,8 @@ module.exports = {
                         zipCode: comps.zip,
                         full: result.formatted_address
                     };
+
+                    newVendor.publicData.searchable = true;
 
                     newVendor.location = {
                         type: "Point",
@@ -163,6 +174,53 @@ module.exports = {
     },
 
     /*
+    PUT: update publicly accessible information of the vendor
+    req.body = {
+        vendor: Vendor id, required
+        streetNumber: Boolean, optional
+        road: Boolean, optional
+        city: Boolean, optional
+        county: Boolean, optional
+        state: Boolean, optional
+        email: Boolean, optional
+        searchable: Boolean, optional
+    }
+    response = Vendor
+    */
+    publicData: function(req, res){
+        Vendor.findOne({_id: req.body.vendor})
+            .then((vendor)=>{
+                if(!vendor) throw "vendor";
+                if(vendor.session !== req.session.vendor) throw "session";
+
+                if(req.body.streetNumber !== undefined) vendor.publicData.streetNumber = req.body.streetNumber;
+                if(req.body.road !== undefined) vendor.publicData.road = req.body.road;
+                if(req.body.city !== undefined) vendor.publicData.city = req.body.city;
+                if(req.body.county !== undefined) vendor.publicData.county = req.body.county;
+                if(req.body.state !== undefined) vendor.publicData.state = req.body.state;
+                if(req.body.email !== undefined) vendor.publicData.email = req.body.email;
+                if(req.body.searchable !== undefined) vendor.publicData.searchable = req.body.searchable;
+
+                return vendor.save();
+            })
+            .then((vendor)=>{
+                vendor.password = undefined;
+                vendor.session = undefined;
+
+                return res.json(vendor);
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "vendor": return res.json("Unable to find this vendor");
+                    case "session": return res.json("Unauthorized access");
+                    default:
+                        console.error(err);
+                        return res.json("ERROR: unable to update vendor");
+                }
+            });
+    },
+
+    /*
     POST: vendor login route
     req.body = {
         email: email, required
@@ -214,7 +272,6 @@ module.exports = {
     response = Vendor
     */
     retrieve: function(req, res){
-        console.log("retrieve");
         Vendor.findOne({_id: req.params.id})
             .then((vendor)=>{
                 let responseVendor = vendor.toObject();
@@ -223,7 +280,6 @@ module.exports = {
                 responseVendor.createdDate = undefined;
                 responseVendor.loggedIn = vendor.session === req.session.vendor;
 
-                console.log(responseVendor);
                 return res.json(responseVendor);
             })
             .catch((err)=>{
