@@ -17,7 +17,7 @@ module.exports = {
         const address = req.query.address;
         const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
 
-    axios.get(fullUrl)
+        axios.get(fullUrl)
             .then((response)=>{
                 const location = [response.data.results[0].location.lat, response.data.results[0].location.lng];
                 const distance = parseFloat(req.query.distance) * 1609.344;
@@ -326,9 +326,7 @@ module.exports = {
         Vendor.findOne({_id: req.params.id})
             .then((vendor)=>{
                 let responseVendor = vendor.toObject();
-                responseVendor.password = undefined;
-                responseVendor.session = undefined;
-                responseVendor.createdDate = undefined;
+                if(req.body.vendor !== req.session.vendor) responseVendor = helper.removeHiddenVendorData(responseVendor);
                 responseVendor.loggedIn = vendor.session === req.session.vendor;
 
                 return res.json(responseVendor);
