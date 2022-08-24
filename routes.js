@@ -6,6 +6,7 @@ module.exports = (app)=>{
     app.get("/docs.css", (req, res)=>{res.sendFile(`${__dirname}/api.css`)});
 
     //VENDOR
+    app.get("/vendor/search", vendor.search)
     app.post("/vendor", vendor.create);
     app.put("/vendor", vendor.update);
     app.put("/vendor/public", vendor.publicData);

@@ -6,6 +6,57 @@ const axios = require("axios");
 
 module.exports = {
     /*
+    GET: search for all vendors in a certain radius
+    req.params = {
+        address: address to search at
+        distance: distance in miles to search
+    }
+    */
+    search: function(req, res){
+        const apiUrl = "https://api.geocod.io/v1.6/geocode";
+        const address = req.query.address;
+        const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
+
+    axios.get(fullUrl)
+            .then((response)=>{
+                const location = [response.data.results[0].location.lat, response.data.results[0].location.lng];
+                const distance = parseFloat(req.query.distance) * 1609.344;
+
+                return Vendor.aggregate([
+                    {$geoNear: {
+                        near: {
+                            type: "Point",
+                            coordinates: location
+                        },
+                        distanceField: "distance",
+                        maxDistance: distance,
+                    }},
+                    {$match: {"publicData.searchable": true}},
+                    {$project: {
+                        name: 1,
+                        description: 1,
+                        items: 1,
+                        address: 1,
+                        email: 1,
+                        distance: 1,
+                        publicData: 1
+                    }}
+                ]);
+            })
+            .then((vendors)=>{
+                for(let i = 0; i < vendors.length; i++){
+                    helper.removeHiddenVendorData(vendors[i]);
+                }
+
+                return res.json(vendors);
+            })
+            .catch((err)=>{
+                console.error(err);
+                return res.json("ERROR: unable to complete search");
+            });
+    },
+
+    /*
     POST: create a new vendor
     req.body = {
         name: String, required

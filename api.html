@@ -10,6 +10,7 @@
             <h1>Market</h1>
             <h2>Routes</h2>
             <h3>Vendor</h3>
+            <a href="#searchVendorRoute">Search</a>
             <a href="#retrieveVendorRoute">Retrieve</a>
             <a href="#createVendorRoute">Create</a>
             <a href="#updateVendorRoute">Update</a>
@@ -26,6 +27,16 @@
             <h1>API Docs for Market</h1>
 
             <h1>Routes</h1>
+
+            <div id="searchVendorRoute" class="route">
+                <h2><span class="method">GET:</span>/vendor/search</h2>
+                <p>Search all vendors by location and distance. Will not show vendors that are not searchable.</p>
+                <pre><code>parameters = {
+    address (required): Address to search from. Seperate spaces with '+'.
+    distance (required): Distance from address to search from.
+}</code></pre>
+                <code>response = [Vendor]</code>
+            </div>
 
             <div id="retrieveVendorRoute" class="route">
                 <h2><span class="method">GET:</span>/vendor/{{Vendor ID}}</h2>
@@ -92,7 +103,7 @@
                 <code>response = {}</code>
             </div>
 
-            <h1>Data</h1>
+            <h1>Models</h1>
 
             <div id="vendorModel" class="model">
                 <h2>Vendor</h2>
