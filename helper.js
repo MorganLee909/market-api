@@ -26,6 +26,9 @@ module.exports = {
         if(!p.email) a.email = undefined;
         if(!p.searchable) a.searchable = undefined;
 
+        vendor.password = undefined;
+        vendor.session = undefined;
+        vendor.createdDate = undefined;
         vendor.publicData = undefined;
 
         return vendor;
