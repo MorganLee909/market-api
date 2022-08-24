@@ -38,8 +38,6 @@ module.exports = {
                 }
             })
             .then((geoData)=>{
-                
-
                 let salt = bcrypt.genSaltSync(10);
                 let hash = bcrypt.hashSync(req.body.password, salt);
 
@@ -102,17 +100,48 @@ module.exports = {
         name: String, optional
         email: String, optional,
         description: String, optional
+        address: String, optional
     }
     */
     update: function(req, res){
         Vendor.findOne({_id: req.body.vendor})
-            .then((vendor)=>{
+            .then(async (vendor)=>{
                 if(vendor === null) throw "vendor";
                 if(vendor.session !== req.session.vendor) throw "session";
 
                 if(req.body.name) vendor.name = req.body.name;
                 if(req.body.email) vendor.email = req.body.email;
                 if(req.body.description) vendor.description = req.body.description;
+
+                if(req.body.address){
+                    const apiUrl = "https://api.geocod.io/v1.6/geocode";
+                    const address = req.body.address;
+                    const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
+                    let geoData = await axios({
+                        method: "get",
+                        url: fullUrl
+                    });
+                    let result = geoData.data.results[0];
+                    let lat = result.location.lat;
+                    let lng = result.location.lng;
+                    let comps = result.address_components;
+
+                    vendor.address = {
+                        streetNumber: comps.number,
+                        road: comps.formatted_street,
+                        city: comps.city,
+                        county: comps.county,
+                        state: comps.state,
+                        country: comps.country,
+                        zipCode: comps.zip,
+                        full: result.formatted_address
+                    };
+
+                    vendor.location = {
+                        type: "Point",
+                        coordinates: [lat, lng]
+                    };
+                }
 
                 return vendor.save();
             })
