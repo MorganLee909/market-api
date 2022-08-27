@@ -12,5 +12,5 @@ module.exports = (app)=>{
     app.put("/vendor/public", vendor.publicData);
     app.post("/vendor/login", vendor.login);
     app.get("/vendor/logout", vendor.logout);
-    app.get("/vendor/:id", vendor.retrieve);
+    app.get("/vendor/:url", vendor.retrieve);
 }

@@ -18,7 +18,8 @@ const VendorSchema = mongoose.Schema({
     },
     url: {
         type: String,
-        required: true
+        required: true,
+        index: true
     },
     password: {
         type: String,

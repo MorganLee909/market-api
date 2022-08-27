@@ -336,11 +336,11 @@ module.exports = {
     /*
     GET: retrieve data from a single vendor
     Data may be different if logged in vendor
-    req.params.id = Vendor id
+    req.params.url = Vendor custom url
     response = Vendor
     */
     retrieve: function(req, res){
-        Vendor.findOne({_id: req.params.id})
+        Vendor.findOne({url: req.params.url})
             .then((vendor)=>{
                 let responseVendor = vendor.toObject();
                 if(req.body.vendor !== req.session.vendor) responseVendor = helper.removeHiddenVendorData(responseVendor);
