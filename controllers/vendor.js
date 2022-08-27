@@ -61,15 +61,22 @@ module.exports = {
     req.body = {
         name: String, required
         email: email, required
+        url: String, required
         password: String, required
         confirmPass: String, required
         description: String, optional
-        address: String, optional
+        address: String, optional,
     }
     */
-    create: function(req, res){
+    create: async function(req, res){
         if(req.body.password !== req.body.confirmPass) return res.json("Passwords do not match");
         if(req.body.password.length < 10) return res.json("Password must contain at least 10 characters");
+
+        let urlCheck = await helper.checkUrl(req.body.url);
+        if(urlCheck === "exists") return res.json("URL already taken, please choose another.");
+        if(urlCheck === "chars") return res.json("URL may only contain letters, numbers or '-'");
+        if(urlCheck === "error") return res.json("ERROR: unable to validate url");
+
         let email = req.body.email.toLowerCase();
 
         Vendor.findOne({email: email})
@@ -95,6 +102,7 @@ module.exports = {
                 let newVendor = new Vendor({
                     name: req.body.name,
                     email: email,
+                    url: req.body.url.toLowerCase(),
                     password: hash,
                     description: req.body.description,
                     session: helper.generateSession(25),

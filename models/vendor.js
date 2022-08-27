@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const email = require("../helper.js").isValidEmail;
+const email = require("../validation.js").isValidEmail;
 
 const VendorSchema = mongoose.Schema({
     name: {
@@ -15,6 +15,10 @@ const VendorSchema = mongoose.Schema({
             message: "Invalid email"
         },
         index: true
+    },
+    url: {
+        type: String,
+        required: true
     },
     password: {
         type: String,

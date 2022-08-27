@@ -1,8 +1,6 @@
-module.exports = {
-    isValidEmail: function(email){
-        return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
-    },
+const Vendor = require("./models/vendor.js");
 
+module.exports = {
     generateSession: function(length){
         let result = "";
         let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -32,5 +30,23 @@ module.exports = {
         vendor.publicData = undefined;
 
         return vendor;
+    },
+
+    checkUrl: function(url){
+        url = url.toLowerCase();
+        if(/^[a-zA-Z0-9-]*$/.test(url)){
+            return Vendor.findOne({url: url})
+                .then((vendor)=>{
+                    if(vendor) return "exists";
+                    
+                    return true;
+                })
+                .catch((err)=>{
+                    console.error(err);
+                    return "error";
+                })
+        }else{
+            return "chars";
+        }
     }
 }
