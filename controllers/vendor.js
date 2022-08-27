@@ -167,13 +167,21 @@ module.exports = {
     POST: update vendor data
     req.body = {
         vendor: vendor Id, required
-        name: String, optional
+        name: String, optional,
+        urls: String, optional
         email: String, optional,
         description: String, optional
         address: String, optional
     }
     */
-    update: function(req, res){
+    update: async function(req, res){
+        if(req.body.url){
+            let urlCheck = await helper.checkUrl(req.body.url);
+            if(urlCheck === "exists") return res.json("URL already taken, please choose another.");
+            if(urlCheck === "chars") return res.json("URL may only contain letters, numbers or '-'");
+            if(urlCheck === "error") return res.json("ERROR: unable to validate url");
+        }
+
         Vendor.findOne({_id: req.body.vendor})
             .then(async (vendor)=>{
                 if(vendor === null) throw "vendor";
@@ -182,6 +190,7 @@ module.exports = {
                 if(req.body.name) vendor.name = req.body.name;
                 if(req.body.email) vendor.email = req.body.email;
                 if(req.body.description) vendor.description = req.body.description;
+                if(req.body.url) vendor.url = req.body.url;
 
                 if(req.body.address){
                     const apiUrl = "https://api.geocod.io/v1.6/geocode";
