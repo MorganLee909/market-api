@@ -55,7 +55,10 @@
     description (String, optional): vendor description
     address: (String, optional): vendor address, will be used for searching
 }</code></pre>
-                <code>response = Vendor</code>
+                <pre><code>response = {
+    vendor: Vendor
+    jwt: JSON web token
+}</code></pre>
             </div>
 
             <div id="updateVendorRoute" class="route">
@@ -94,13 +97,10 @@
     email (String): vendor email
     password (String): vendor password
 }</code></pre>
-                <code>response = Vendor</code>
-            </div>
-
-            <div id="logoutVendorRoute" class="route">
-                <h2><span class="method">GET:</span>/vendor/logout</h2>
-                <p>Vendor logout route</p>
-                <code>response = {}</code>
+                <pre><code>response = {
+    vendor: Vendor
+    jwt: JSON web token
+}</code></pre>
             </div>
 
             <h1>Models</h1>

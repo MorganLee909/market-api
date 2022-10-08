@@ -11,6 +11,5 @@ module.exports = (app)=>{
     app.put("/vendor", vendor.update);
     app.put("/vendor/public", vendor.publicData);
     app.post("/vendor/login", vendor.login);
-    app.get("/vendor/logout", vendor.logout);
-    app.get("/vendor/:url", vendor.retrieve);
+    app.get("/vendor/:id", vendor.retrieve);
 }
