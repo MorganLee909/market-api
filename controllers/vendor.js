@@ -3,6 +3,7 @@ const Vendor = require("../models/vendor.js");
 const helper = require("../helper.js");
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
     /*
@@ -139,11 +140,19 @@ module.exports = {
             })
             .then((vendor)=>{
                 req.session.vendor = vendor.session;
+
+                let token = jwt.sign({
+                    email: vendor.email,
+                    passHash: vendor.password
+                }, process.env.JWT_SECRET);
                 
                 vendor.password = undefined;
                 vendor.session = undefined;
 
-                return res.json(vendor);
+                return res.json({
+                    vendor: vendor,
+                    jwt: token
+                });
             })
             .catch((err)=>{
                 switch(err){
@@ -297,7 +306,15 @@ module.exports = {
                 v.password = undefined;
                 v.session = undefined;
 
-                return res.json(v);
+                let token = jwt.sign({
+                    email: v.email,
+                    passHash: v.password
+                }, process.env.JWT_SECRET);
+
+                return res.json({
+                    vendor: v,
+                    jwt: token
+                });
             })
             .catch((err)=>{
                 switch(err){
@@ -308,12 +325,6 @@ module.exports = {
                         return res.json("ERROR: unable to login user");
                 }
             });
-    },
-
-    logout: function(req, res){
-        req.session.vendor = null;
-
-        return res.json({});
     },
 
     /*
