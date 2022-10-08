@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const compression = require("compression");
-const session = require("cookie-session");
 const cors = require("cors");
 const https = require("https");
 const fs = require("fs");
@@ -39,12 +38,6 @@ app.use(compression());
 app.use(express.json());
 app.use(cors({
     origin: "http://localhost:5173"
-}));
-app.use(session({
-    secret: "Marketing many magnificent modern marvels",
-    sameSite: "lax",
-    saveUninitialized: true,
-    resave: false
 }));
 
 require("./routes")(app);

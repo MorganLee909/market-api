@@ -30,10 +30,6 @@ const VendorSchema = mongoose.Schema({
         required: true
     },
     items: [],
-    session: {
-        type: String,
-        required: true
-    },
     address: {
         streetNumber: String,
         road: String,

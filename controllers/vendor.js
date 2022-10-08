@@ -66,7 +66,11 @@ module.exports = {
         password: String, required
         confirmPass: String, required
         description: String, optional
-        address: String, optional,
+        address: String, optional
+    }
+    response = {
+        vendor: Vendor
+        jwt: JSON web token
     }
     */
     create: async function(req, res){
@@ -106,7 +110,6 @@ module.exports = {
                     url: req.body.url.toLowerCase(),
                     password: hash,
                     description: req.body.description,
-                    session: helper.generateSession(25),
                     items: [],
                     publicData: {
                         streetNumber: false,
@@ -147,15 +150,12 @@ module.exports = {
                 return newVendor.save();
             })
             .then((vendor)=>{
-                req.session.vendor = vendor.session;
-
                 let token = jwt.sign({
                     email: vendor.email,
                     passHash: vendor.password
                 }, process.env.JWT_SECRET);
                 
                 vendor.password = undefined;
-                vendor.session = undefined;
 
                 return res.json({
                     vendor: vendor,
@@ -194,7 +194,6 @@ module.exports = {
         Vendor.findOne({_id: req.body.vendor})
             .then(async (vendor)=>{
                 if(vendor === null) throw "vendor";
-                if(vendor.session !== req.session.vendor) throw "session";
 
                 if(req.body.name) vendor.name = req.body.name;
                 if(req.body.email) vendor.email = req.body.email;
@@ -235,14 +234,12 @@ module.exports = {
             })
             .then((vendor)=>{
                 vendor.password = undefined;
-                vendor.session = undefined;
 
                 return res.json(vendor);
             })
             .catch((err)=>{
                 switch(err){
                     case "vendor": return res.json("This vendor does not exist");
-                    case "session": return res.json("Permission denied");
                     default:
                         console.error(err);
                         return res.json("ERROR: unable to update vendor");
@@ -268,7 +265,6 @@ module.exports = {
         Vendor.findOne({_id: req.body.vendor})
             .then((vendor)=>{
                 if(!vendor) throw "vendor";
-                if(vendor.session !== req.session.vendor) throw "session";
 
                 if(req.body.streetNumber !== undefined) vendor.publicData.streetNumber = req.body.streetNumber;
                 if(req.body.road !== undefined) vendor.publicData.road = req.body.road;
@@ -282,14 +278,12 @@ module.exports = {
             })
             .then((vendor)=>{
                 vendor.password = undefined;
-                vendor.session = undefined;
 
                 return res.json(vendor);
             })
             .catch((err)=>{
                 switch(err){
                     case "vendor": return res.json("Unable to find this vendor");
-                    case "session": return res.json("Unauthorized access");
                     default:
                         console.error(err);
                         return res.json("ERROR: unable to update vendor");
@@ -302,6 +296,10 @@ module.exports = {
     req.body = {
         email: email, required
         password: String, required
+    }
+    response = {
+        vendor: Vendor
+        jwt: JSON web token
     }
     */
     login: function(req, res){
@@ -318,10 +316,7 @@ module.exports = {
             .then((result)=>{
                 if(!result) throw "password";
 
-                req.session.vendor = v.session;
-
                 v.password = undefined;
-                v.session = undefined;
 
                 let token = jwt.sign({
                     email: v.email,
@@ -354,8 +349,8 @@ module.exports = {
         Vendor.findOne({url: req.params.url})
             .then((vendor)=>{
                 let responseVendor = vendor.toObject();
-                if(req.body.vendor !== req.session.vendor) responseVendor = helper.removeHiddenVendorData(responseVendor);
-                responseVendor.loggedIn = vendor.session === req.session.vendor;
+                // if(req.body.vendor !== req.session.vendor) responseVendor = helper.removeHiddenVendorData(responseVendor);
+                // responseVendor.loggedIn = vendor.session === req.session.vendor;
 
                 return res.json(responseVendor);
             })
