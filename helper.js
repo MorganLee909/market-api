@@ -1,17 +1,6 @@
 const Vendor = require("./models/vendor.js");
 
 module.exports = {
-    generateSession: function(length){
-        let result = "";
-        let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        
-        for(let i = 0; i < length; i++){
-            result += characters.charAt(Math.floor(Math.random() * characters.length));
-        }
-
-        return result;
-    },
-
     removeHiddenVendorData: function(vendor){
         let a = vendor.address;
         let p = vendor.publicData;
@@ -24,10 +13,14 @@ module.exports = {
         if(!p.email) a.email = undefined;
         if(!p.searchable) a.searchable = undefined;
 
+        a.country = undefined;
+        a.zipCode = undefined;
+        a.full = undefined;
+
         vendor.password = undefined;
-        vendor.session = undefined;
         vendor.createdDate = undefined;
         vendor.publicData = undefined;
+        vendor.location = undefined;
 
         return vendor;
     },

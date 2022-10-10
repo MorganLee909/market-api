@@ -317,13 +317,13 @@ module.exports = {
             .then((result)=>{
                 if(!result) throw "password";
 
-                v.password = undefined;
-
                 let token = jwt.sign({
                     _id: v._id.toString(),
                     email: v.email,
                     passHash: v.password
                 }, process.env.JWT_SECRET);
+                
+                v.password = undefined;
 
                 return res.json({
                     vendor: v,
@@ -343,22 +343,27 @@ module.exports = {
 
     /*
     GET: retrieve data from a single vendor
-    Data may be different if logged in vendor
+    Data may be different if there is a logged in vendor
     req.params.url = Vendor custom url
     response = Vendor
     */
     retrieve: function(req, res){
-        Vendor.findOne({url: req.params.url})
+        Vendor.findOne({_id: req.params.url})
             .then((vendor)=>{
-                let responseVendor = vendor.toObject();
-                // if(req.body.vendor !== req.session.vendor) responseVendor = helper.removeHiddenVendorData(responseVendor);
-                // responseVendor.loggedIn = vendor.session === req.session.vendor;
+                let auth = req.headers["authorization"];
 
-                return res.json(responseVendor);
+                if(auth){
+                    const authData = jwt.verify(auth.split(" ")[1], process.env.JWT_SECRET);
+                    if(authData._id == vendor._id.toString()) return res.json(vendor);
+                }
+
+                vendor = helper.removeHiddenVendorData(vendor);
+
+                return res.json(vendor);
             })
             .catch((err)=>{
                 console.error(err);
-                return res.json("ERROR: unable to retrieve vendor data");
+                return "ERROR: unable to retrieve vendor data";
             });
     }
 }
