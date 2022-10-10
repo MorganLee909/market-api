@@ -151,6 +151,7 @@ module.exports = {
             })
             .then((vendor)=>{
                 let token = jwt.sign({
+                    _id: vendor._id.toString(),
                     email: vendor.email,
                     passHash: vendor.password
                 }, process.env.JWT_SECRET);
@@ -319,6 +320,7 @@ module.exports = {
                 v.password = undefined;
 
                 let token = jwt.sign({
+                    _id: v._id.toString(),
                     email: v.email,
                     passHash: v.password
                 }, process.env.JWT_SECRET);
