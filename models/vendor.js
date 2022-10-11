@@ -31,6 +31,16 @@ const VendorSchema = mongoose.Schema({
     },
     items: [],
     photos: [String],
+    hours: {
+        always: Boolean,
+        monday: {open: Number, close: Number},
+        tuesday: {open: Number, close: Number},
+        wednesday: {open: Number, close: Number},
+        thursday: {open: Number, close: Number},
+        friday: {open: Number, close: Number},
+        saturday: {open: Number, close: Number},
+        sunday: {open: Number, close: Number},
+    },
     address: {
         streetNumber: String,
         road: String,

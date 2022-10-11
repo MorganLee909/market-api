@@ -187,6 +187,10 @@ module.exports = {
         email: String, optional,
         description: String, optional
         address: String, optional
+        hours: {
+            always: Boolean
+            ...daysOfWeek: {open: Number, close: Number}
+        }
     }
     req.files = {
         photos: Image || [Image]
@@ -208,6 +212,7 @@ module.exports = {
                 if(req.body.email) vendor.email = req.body.email;
                 if(req.body.description) vendor.description = req.body.description;
                 if(req.body.url) vendor.url = req.body.url;
+                if(req.body.hours) vendor.hours = JSON.parse(req.body.hours);
 
                 if(req.body.address){
                     const apiUrl = "https://api.geocod.io/v1.6/geocode";
