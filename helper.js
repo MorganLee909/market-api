@@ -26,7 +26,6 @@ module.exports = {
     },
 
     checkUrl: function(url){
-        url = url.toLowerCase();
         if(/^[a-zA-Z0-9-]*$/.test(url)){
             return Vendor.findOne({url: url})
                 .then((vendor)=>{

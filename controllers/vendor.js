@@ -62,7 +62,7 @@ module.exports = {
     req.body = {
         name: String, required
         email: email, required
-        url: String, required
+        url: String, optional
         password: String, required
         confirmPass: String, required
         description: String, optional
@@ -77,10 +77,14 @@ module.exports = {
         if(req.body.password !== req.body.confirmPass) return res.json("Passwords do not match");
         if(req.body.password.length < 10) return res.json("Password must contain at least 10 characters");
 
-        let urlCheck = await helper.checkUrl(req.body.url);
-        if(urlCheck === "exists") return res.json("URL already taken, please choose another.");
-        if(urlCheck === "chars") return res.json("URL may only contain letters, numbers or '-'");
-        if(urlCheck === "error") return res.json("ERROR: unable to validate url");
+        let url = ""
+        if(req.body.url){
+            url = req.body.url.toLowerCase();
+            let urlCheck = await helper.checkUrl(url);
+            if(urlCheck === "exists") return res.json("URL already taken, please choose another.");
+            if(urlCheck === "chars") return res.json("URL may only contain letters, numbers or '-'");
+            if(urlCheck === "error") return res.json("ERROR: unable to validate url");
+        }
 
         let email = req.body.email.toLowerCase();
 
@@ -107,7 +111,6 @@ module.exports = {
                 let newVendor = new Vendor({
                     name: req.body.name,
                     email: email,
-                    url: req.body.url.toLowerCase(),
                     password: hash,
                     description: req.body.description,
                     items: [],
@@ -121,6 +124,8 @@ module.exports = {
                         searchable: false
                     }
                 });
+
+                newVendor.url = url ? url : newVendor._id.toString();
 
                 if(geoData !== null){
                     let result = geoData.data.results[0];
@@ -348,7 +353,7 @@ module.exports = {
     response = Vendor
     */
     retrieve: function(req, res){
-        Vendor.findOne({_id: req.params.url})
+        Vendor.findOne({url: req.params.url})
             .then((vendor)=>{
                 let auth = req.headers["authorization"];
 
