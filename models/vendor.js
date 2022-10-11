@@ -27,7 +27,7 @@ const VendorSchema = mongoose.Schema({
     },
     description: {
         type: String,
-        required: true
+        required: false
     },
     items: [],
     address: {
