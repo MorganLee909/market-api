@@ -2,8 +2,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const compression = require("compression");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 const https = require("https");
 const fs = require("fs");
+
+global.appRoot = __dirname;
 
 const app = express();
 
@@ -36,9 +39,14 @@ mongoose.connect("mongodb://127.0.0.1/market", mongooseOptions);
 
 app.use(compression());
 app.use(express.json());
-app.use(cors({
-    origin: "http://localhost:5173"
-}));
+app.use(cors({origin: "http://localhost:5173"}));
+app.use(fileUpload({
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+        files: 5
+    },
+    createParentPath: true
+}))
 
 require("./routes")(app);
 

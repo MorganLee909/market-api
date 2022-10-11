@@ -188,6 +188,9 @@ module.exports = {
         description: String, optional
         address: String, optional
     }
+    req.files = {
+        photos: Image || [Image]
+    }
     */
     update: async function(req, res){
         if(req.body.url){
@@ -234,6 +237,21 @@ module.exports = {
                         type: "Point",
                         coordinates: [lat, lng]
                     };
+                }
+
+                if(req.files.photos){
+                    vendor.photos = [];
+                    let photos = req.files.photos.length ? req.files.photos : [req.files.photos];
+
+                    for(let i = 0; i < photos.length; i++){
+                        let fileType = photos[i].name.split(".");
+                        fileType = fileType[fileType.length-1];
+                        let fileString = `/vendor-photos/${helper.createId(25)}.${fileType}`;
+
+                        photos[i].mv(`${appRoot}${fileString}`).catch((err)=>{console.error(err)});
+
+                        vendor.photos.push(fileString);
+                    }
                 }
 
                 return vendor.save();
