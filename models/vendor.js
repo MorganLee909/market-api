@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const {ProductSchema} = require("./product.js");
+
 const email = require("../validation.js").isValidEmail;
 
 const VendorSchema = mongoose.Schema({
@@ -29,7 +31,7 @@ const VendorSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    items: [],
+    products: [ProductSchema],
     photos: [String],
     hours: {
         always: Boolean,

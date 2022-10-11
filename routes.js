@@ -1,4 +1,5 @@
 const vendor = require("./controllers/vendor.js");
+const product = require("./controllers/product.js");
 
 module.exports = (app)=>{
     //DOCS
@@ -12,6 +13,9 @@ module.exports = (app)=>{
     app.put("/vendor/public", vendor.publicData);
     app.post("/vendor/login", vendor.login);
     app.get("/vendor/:url", vendor.retrieve);
+
+    //PRODUCTS
+    app.post("/product", product.create);
 
     //FILES
     app.get("/vendor-photos/:file", (req, res)=>res.sendFile(`${appRoot}/vendor-photos/${req.params.file}`));
