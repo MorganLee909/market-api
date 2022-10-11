@@ -16,6 +16,8 @@
             <a href="#updateVendorRoute">Update</a>
             <a href="#updatePublicDataRoute">Update Public Data</a>
             <a href="#loginVendorRoute">Login</a>
+            <h3>Product</h3>
+            <a href="#createProductRoute">Create</a>
             <h2>Models</h2>
             <a href="#vendorModel">Vendor</a>
             <a href="#productModel">Product</a>
@@ -117,6 +119,21 @@ files = {
     vendor: Vendor
     jwt: JSON web token
 }</code></pre>
+            </div>
+
+            <div id="createProductRoute" class="route">
+                <h2><span class="method">POST:</span>/product</h2>
+                <p>Create new products for a vendor</p>
+                <p>*Requires JSON web token authorization header</p>
+                <pre><code>body = {
+    products = [{
+        name (String, required): name of product
+        unit (String, optional): unit of measurement for the product
+        quantity (Number, optional): current quantity of the product
+    }]
+}</code></pre>
+
+                <code>response = [Product]</code>
             </div>
 
             <h1>Models</h1>
