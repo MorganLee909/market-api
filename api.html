@@ -18,6 +18,7 @@
             <a href="#loginVendorRoute">Login</a>
             <h2>Models</h2>
             <a href="#vendorModel">Vendor</a>
+            <a href="#productModel">Product</a>
         </div>
 
         <div style="width:350px;"></div>
@@ -45,10 +46,11 @@
 
             <div id="createVendorRoute" class="route">
                 <h2><span class="method">POST:</span>/vendor</h2>
-                <p>Creates a new vendor</p>
+                <p>Creates a new vendor.</p>
                 <pre><code>body = {
     name (String, required): vendor name
     email (String, required): vendor email
+    url (String, optional): vendor chosen url, may only contain letters, numbers and '-'. Default will be set to vendor id
     password (String, required): vendor password
     confirmPassword (String, required): confirmation password
     description (String, optional): vendor description
@@ -62,13 +64,28 @@
 
             <div id="updateVendorRoute" class="route">
                 <h2><span class="method">PUT:</span>/vendor</h2>
-                <p>Update vendor profile data</p>
+                <p>Update vendor profile data. If photos are uploaded, then FormData must be used. When hours are entered, the numbers for open/close should be minutes since start of day. 1am = 60, 1pm = 780</p>
                 <pre><code>body = {
     vendor (String, required): vendor ID
     name (String, optional): new vendor name
+    url (String, optional): vendor chosen url for their homepage. May only contain letters, numbers and '-'.
     email (String, optional): new vendor email
     description (String optional): new vendor description
     address (String optional): new vendor address
+    hours (optional): {
+        always (Boolean, optional): true if business is 24/7. Otherwise undefined or false.
+        monday (optional): {open: Number, close: Number}
+        tuesday (optional): {open: Number, close: Number}
+        wednesday (optional): {open: Number, close: Number}
+        thursday (optional): {open: Number, close: Number}
+        friday (optional): {open: Number, close: Number}
+        saturday (optional): {open: Number, close: Number}
+        sunday (optional): {open: Number, close: Number}
+    }
+}
+
+files = {
+    photos, (Files, optional): Photos to be used on vendor's home page.
 }</code></pre>
                 <code>response = Vendor</code>
             </div>
@@ -116,7 +133,17 @@
     address (Object): contains various address data
     publicData (Object): contains booleans that determine which private information the vendor wishes to share
 }</code></pre>
-            </div>            
+            </div>
+
+            <div id="productModel" class="model">
+                <h2>Product</h2>
+                <p>Products that a vendor has available</p>
+                <pre><code>{
+    name (String): name of the product
+    unit (String): unit of measurement for the product
+    quantity (Number): quantity of the product that is currently available
+}</code></pre>
+            </div>
         </div>
     </body>
 </html>

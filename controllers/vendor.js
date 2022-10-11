@@ -183,7 +183,7 @@ module.exports = {
     req.body = {
         vendor: vendor Id, required
         name: String, optional,
-        urls: String, optional
+        url: String, optional
         email: String, optional,
         description: String, optional
         address: String, optional
