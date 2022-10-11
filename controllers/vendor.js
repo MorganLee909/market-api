@@ -359,7 +359,10 @@ module.exports = {
 
                 if(auth){
                     const authData = jwt.verify(auth.split(" ")[1], process.env.JWT_SECRET);
-                    if(authData._id == vendor._id.toString()) return res.json(vendor);
+                    if(authData._id == vendor._id.toString()){
+                        vendor.password = undefined;
+                        return res.json(vendor);
+                    }
                 }
 
                 vendor = helper.removeHiddenVendorData(vendor);
