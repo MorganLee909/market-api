@@ -8,7 +8,6 @@ module.exports = {
         try{
             authData = jwt.verify(req.headers["authorization"].split(" ")[1], process.env.JWT_SECRET);
         }catch(e){
-            console.log(e);
             return res.json("Web token not provided");
         }
 

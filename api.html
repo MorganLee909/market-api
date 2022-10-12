@@ -18,6 +18,7 @@
             <a href="#loginVendorRoute">Login</a>
             <h3>Product</h3>
             <a href="#createProductRoute">Create</a>
+            <a href="#removeProductRoute">Remove</a>
             <h2>Models</h2>
             <a href="#vendorModel">Vendor</a>
             <a href="#productModel">Product</a>
@@ -126,7 +127,7 @@ files = {
                 <p>Create new products for a vendor</p>
                 <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
-    products = [{
+    products: [{
         name (String, required): name of product
         unit (String, optional): unit of measurement for the product
         quantity (Number, optional): current quantity of the product
@@ -134,6 +135,17 @@ files = {
 }</code></pre>
 
                 <code>response = [Product]</code>
+            </div>
+
+            <div id="removeProductRoute" class="route">
+                <h2><span class="method">DELETE:</span>/product</h2>
+                <p>Remove products from a vendor</p>
+                <p>*Requires JSON web token authorization header</p>
+                <pre><code>body = {
+    products: [Vendor id]
+}</code></pre>
+
+                <code>Response = {}</code>
             </div>
 
             <h1>Models</h1>

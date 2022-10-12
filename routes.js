@@ -18,6 +18,7 @@ module.exports = (app)=>{
 
     //PRODUCTS
     app.post("/product", vendorAuth, product.create);
+    app.delete("/product", vendorAuth, product.remove);
 
     //FILES
     app.get("/vendor-photos/:file", (req, res)=>res.sendFile(`${appRoot}/vendor-photos/${req.params.file}`));
