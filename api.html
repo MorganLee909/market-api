@@ -15,6 +15,7 @@
             <a href="#createVendorRoute">Create</a>
             <a href="#updateVendorRoute">Update</a>
             <a href="#updatePublicDataRoute">Update Public Data</a>
+            <a href="#updateStyleRoute">Update Style</a>
             <a href="#loginVendorRoute">Login</a>
             <h3>Product</h3>
             <a href="#createProductRoute">Create</a>
@@ -108,6 +109,23 @@ files = {
     searchable (Boolean, optional): if true, users can find vendor by searching
 }</code></pre>
                 <code>response = Vendor</code>
+            </div>
+
+            <div id="updateStyleRoute" class="route">
+                <h2><span class="method">PUT:</span>/vendor/style</h2>
+                <p>Update the style for the vendor's home page</p>
+                <p>*Requires JSON web token authorization header</p>
+                <pre><code>body = {
+    mainColor (String, optional): main color option for page. Hexidecimal String with "#"
+    secondaryColor (String, optional): secondary color option for page. Hexidecimal String with "#"
+    textColor (String, optional): text color option for page. Hexidecimal String with "#"
+}</code></pre>
+
+                <pre><code>response = {
+    mainColor: String
+    secondaryColor: String
+    textColor: String
+}</code></pre>
             </div>
 
             <div id="loginVendorRoute" class="route">
