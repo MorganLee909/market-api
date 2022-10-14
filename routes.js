@@ -13,6 +13,7 @@ module.exports = (app)=>{
     app.post("/vendor", vendor.create);
     app.put("/vendor", vendor.update);
     app.put("/vendor/public", vendor.publicData);
+    app.put("/vendor/style", vendorAuth, vendor.updateStyle);
     app.post("/vendor/login", vendor.login);
     app.get("/vendor/:url", vendor.retrieve);
 

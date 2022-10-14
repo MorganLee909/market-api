@@ -43,6 +43,11 @@ const VendorSchema = mongoose.Schema({
         saturday: {open: Number, close: Number},
         sunday: {open: Number, close: Number},
     },
+    style: {
+        mainColor: String,
+        secondaryColor: String,
+        textColor: String
+    },
     address: {
         streetNumber: String,
         road: String,

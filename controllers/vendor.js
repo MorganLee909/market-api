@@ -113,7 +113,12 @@ module.exports = {
                     email: email,
                     password: hash,
                     description: req.body.description,
-                    items: [],
+                    products: [],
+                    style: {
+                        mainColor: "#342628",
+                        secondaryColor: "#788402",
+                        textColor: "#f7f4ef"
+                    },
                     publicData: {
                         streetNumber: false,
                         road: false,
@@ -317,6 +322,36 @@ module.exports = {
                         console.error(err);
                         return res.json("ERROR: unable to update vendor");
                 }
+            });
+    },
+
+    /*
+    PUT: update style choices for the vendor's homepage
+    req.body = {
+        mainColor: String, optional
+        secondaryColor: String, optional
+        textColor: String, optional
+    }
+    response = {
+        mainColor: String
+        secondaryColor: String
+        textColor: String
+    }
+    */
+    updateStyle: function(req, res){
+        let style = res.locals.vendor.style;
+
+        if(req.body.mainColor) style.mainColor = req.body.mainColor;
+        if(req.body.secondaryColor) style.secondaryColor = req.body.secondaryColor;
+        if(req.body.textColor) style.textColor = req.body.textColor;
+
+        res.locals.vendor.save()
+            .then((vendor)=>{
+                return res.json(vendor.style);
+            })
+            .catch((err)=>{
+                console.error(err);
+                return res.json("ERROR: unable to update style preferences");
             });
     },
 
