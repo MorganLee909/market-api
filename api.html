@@ -19,6 +19,7 @@
             <h3>Product</h3>
             <a href="#createProductRoute">Create</a>
             <a href="#removeProductRoute">Remove</a>
+            <a href="#updateProductRoute">Update</a>
             <h2>Models</h2>
             <a href="#vendorModel">Vendor</a>
             <a href="#productModel">Product</a>
@@ -124,7 +125,7 @@ files = {
 
             <div id="createProductRoute" class="route">
                 <h2><span class="method">POST:</span>/product</h2>
-                <p>Create new products for a vendor</p>
+                <p>Create new products for a vendor. Response contains only the newly created products.</p>
                 <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
     products: [{
@@ -144,8 +145,22 @@ files = {
                 <pre><code>body = {
     products: [Vendor id]
 }</code></pre>
-
                 <code>Response = {}</code>
+            </div>
+
+            <div id="updateProductRoute" class="route">
+                <h2><span class="method">PUT:</span>/product</h2>
+                <p>Update a vendor's products. Response contains only the updated products.</p>
+                <p>*Requires JSON web token authorization header</p>
+                <pre><code>body = {
+    products: [{
+        id (String, required): id of product to update
+        name (String, optional): new product name to update to
+        unit (String, optional): new unit of measurement to update to
+        quantity (Number, optional): new quantity of product to update to
+    }]
+}</code></pre>
+                <code>response = [Product]</code>
             </div>
 
             <h1>Models</h1>
