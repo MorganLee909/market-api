@@ -1,5 +1,4 @@
 const vendor = require("./controllers/vendor.js");
-const product = require("./controllers/product.js");
 
 const vendorAuth = require("./middleware.js").vendorAuth;
 
@@ -16,11 +15,7 @@ module.exports = (app)=>{
     app.put("/vendor/style", vendorAuth, vendor.updateStyle);
     app.post("/vendor/login", vendor.login);
     app.get("/vendor/:url", vendor.retrieve);
-
-    //PRODUCTS
-    app.post("/product", vendorAuth, product.create);
-    app.delete("/product", vendorAuth, product.remove);
-    app.put("/product", vendorAuth, product.update);
+    app.put("/vendor/product", vendorAuth, vendor.updateProducts);
 
     //FILES
     app.get("/vendor-photos/:file", (req, res)=>res.sendFile(`${appRoot}/vendor-photos/${req.params.file}`));

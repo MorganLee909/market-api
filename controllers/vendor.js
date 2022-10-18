@@ -1,4 +1,5 @@
 const Vendor = require("../models/vendor.js");
+const {Product} = require("../models/product.js");
 
 const helper = require("../helper.js");
 const bcrypt = require("bcryptjs");
@@ -430,6 +431,69 @@ module.exports = {
             .catch((err)=>{
                 console.error(err);
                 return "ERROR: unable to retrieve vendor data";
+            });
+    },
+
+    /*
+    PUT: create/update/remove products from vendor
+    req.body = {
+        create: [{
+            name: String
+            unit: String
+            quantity: Number
+        }]
+        update: [{
+            _id: Product id
+            name: String, optional
+            unit: String, optional
+            quantity: Number, optional
+        }],
+        remove: [Product id]
+    }
+    response = [Product] (all vendor products)
+    */
+    updateProducts: function(req, res){
+        if(req.body.remove){
+            for(let i = 0; i < req.body.remove.length; i++){
+                for(let j = 0; j < res.locals.vendor.products.length; j++){
+                    if(req.body.remove[i] === res.locals.vendor.products[j]._id.toString()){
+                        res.locals.vendor.products.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(req.body.update){
+            for(let i = 0; i < req.body.update.length; i++){
+                for(let j = 0; j < res.locals.vendor.products.length; j++){
+                    if(req.body.update[i]._id === res.locals.vendor.products[j]._id.toString()){
+                        if(req.body.update[i].name) res.locals.vendor.products[j].name = req.body.update[i].name;
+                        if(req.body.update[i].unit) res.locals.vendor.products[j].unit = req.body.update[i].unit;
+                        if(req.body.update[i].quantity) res.locals.vendor.products[j].quantity = req.body.update[i].quantity;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(req.body.create){
+            for(let i = 0; i < req.body.create.length; i++){
+                res.locals.vendor.products.push(new Product({
+                    name: req.body.create[i].name,
+                    unit: req.body.create[i].unit,
+                    quantity: req.body.create[i].quantity,
+                }));
+            }
+        }
+
+        res.locals.vendor.save()
+            .then((vendor)=>{
+                return res.json(vendor.products);
+            })
+            .catch((err)=>{
+                console.error(err);
+                return res.json("ERROR: unable to update products");
             });
     }
 }

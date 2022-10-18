@@ -161,7 +161,7 @@ files = {
                 <p>Remove products from a vendor</p>
                 <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
-    products: [Vendor id]
+    products: [Product id]
 }</code></pre>
                 <code>Response = {}</code>
             </div>
@@ -172,7 +172,7 @@ files = {
                 <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
     products: [{
-        id (String, required): id of product to update
+        _id (String, required): id of product to update
         name (String, optional): new product name to update to
         unit (String, optional): new unit of measurement to update to
         quantity (Number, optional): new quantity of product to update to
