@@ -17,6 +17,7 @@
             <a href="#updatePublicDataRoute">Update Public Data</a>
             <a href="#updateStyleRoute">Update Style</a>
             <a href="#loginVendorRoute">Login</a>
+            <a href="#updateProductsRoute">Update Products</a>
             <h3>Product</h3>
             <a href="#createProductRoute">Create</a>
             <a href="#removeProductRoute">Remove</a>
@@ -141,44 +142,25 @@ files = {
 }</code></pre>
             </div>
 
-            <div id="createProductRoute" class="route">
-                <h2><span class="method">POST:</span>/product</h2>
-                <p>Create new products for a vendor. Response contains only the newly created products.</p>
+            <div id="updateProductsRoute" class="route">
+                <h2><span class="method">PUT:</span>/vendor/product</h2>
+                <p>Create, update and remove products from the vendor. "create", "update", and "remove" are all optional.</p>
                 <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
-    products: [{
+    create: [{
         name (String, required): name of product
-        unit (String, optional): unit of measurement for the product
-        quantity (Number, optional): current quantity of the product
+        unit (String, required): unit of measurement for the product
+        quantity (Number, optional): quantity of the product
     }]
-}</code></pre>
-
-                <code>response = [Product]</code>
-            </div>
-
-            <div id="removeProductRoute" class="route">
-                <h2><span class="method">DELETE:</span>/product</h2>
-                <p>Remove products from a vendor</p>
-                <p>*Requires JSON web token authorization header</p>
-                <pre><code>body = {
-    products: [Product id]
-}</code></pre>
-                <code>Response = {}</code>
-            </div>
-
-            <div id="updateProductRoute" class="route">
-                <h2><span class="method">PUT:</span>/product</h2>
-                <p>Update a vendor's products. Response contains only the updated products.</p>
-                <p>*Requires JSON web token authorization header</p>
-                <pre><code>body = {
-    products: [{
-        _id (String, required): id of product to update
-        name (String, optional): new product name to update to
-        unit (String, optional): new unit of measurement to update to
-        quantity (Number, optional): new quantity of product to update to
+    update: [{
+        _id: (String, required): id of the product to update
+        name: (String, optional): updated product name
+        unit: (String, optional): updated unit of measurement for the product
+        quantity: (Number, optinal): updated quantity of the product
     }]
+    remove ([String], optional): ids for all products to be removed from the vendor
 }</code></pre>
-                <code>response = [Product]</code>
+            <code>response = [Product] (all vendor products, even if no change)</code>
             </div>
 
             <h1>Models</h1>
@@ -190,7 +172,7 @@ files = {
     name (String): vendor name
     email (String): vendor email
     description (String): vendor description
-    items (Array): array of items that the vendor has available for sale
+    products (Array): array of 'Product'
     createdDate (Date): date of creation of vendor on the website
     address (Object): contains various address data
     publicData (Object): contains booleans that determine which private information the vendor wishes to share
@@ -199,7 +181,7 @@ files = {
 
             <div id="productModel" class="model">
                 <h2>Product</h2>
-                <p>Products that a vendor has available</p>
+                <p>Products that a vendor has available. Products are contained inside Vendor in vendor.products.</p>
                 <pre><code>{
     name (String): name of the product
     unit (String): unit of measurement for the product
