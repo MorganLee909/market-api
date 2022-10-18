@@ -203,70 +203,67 @@ module.exports = {
     }
     */
     update: async function(req, res){
-        if(req.body.url){
+        if(req.body.url && req.body.url !== res.locals.vendor.url){
             let urlCheck = await helper.checkUrl(req.body.url);
             if(urlCheck === "exists") return res.json("URL already taken, please choose another.");
             if(urlCheck === "chars") return res.json("URL may only contain letters, numbers or '-'");
             if(urlCheck === "error") return res.json("ERROR: unable to validate url");
         }
 
-        Vendor.findOne({_id: req.body.vendor})
-            .then(async (vendor)=>{
-                if(vendor === null) throw "vendor";
+        if(res.locals.vendor === null) throw "vendor";
 
-                if(req.body.name) vendor.name = req.body.name;
-                if(req.body.email) vendor.email = req.body.email;
-                if(req.body.description) vendor.description = req.body.description;
-                if(req.body.url) vendor.url = req.body.url;
-                if(req.body.hours) vendor.hours = JSON.parse(req.body.hours);
+        if(req.body.name) res.locals.vendor.name = req.body.name;
+        if(req.body.email) res.locals.vendor.email = req.body.email;
+        if(req.body.description) res.locals.vendor.description = req.body.description;
+        if(req.body.url) res.locals.vendor.url = req.body.url;
+        if(req.body.hours) res.locals.vendor.hours = JSON.parse(req.body.hours);
 
-                if(req.body.address){
-                    const apiUrl = "https://api.geocod.io/v1.6/geocode";
-                    const address = req.body.address;
-                    const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
-                    let geoData = await axios({
-                        method: "get",
-                        url: fullUrl
-                    });
-                    let result = geoData.data.results[0];
-                    let lat = result.location.lat;
-                    let lng = result.location.lng;
-                    let comps = result.address_components;
+        if(req.body.address){
+            const apiUrl = "https://api.geocod.io/v1.6/geocode";
+            const address = req.body.address;
+            const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
+            let geoData = await axios({
+                method: "get",
+                url: fullUrl
+            });
+            let result = geoData.data.results[0];
+            let lat = result.location.lat;
+            let lng = result.location.lng;
+            let comps = result.address_components;
 
-                    vendor.address = {
-                        streetNumber: comps.number,
-                        road: comps.formatted_street,
-                        city: comps.city,
-                        county: comps.county,
-                        state: comps.state,
-                        country: comps.country,
-                        zipCode: comps.zip,
-                        full: result.formatted_address
-                    };
+            res.locals.vendor.address = {
+                streetNumber: comps.number,
+                road: comps.formatted_street,
+                city: comps.city,
+                county: comps.county,
+                state: comps.state,
+                country: comps.country,
+                zipCode: comps.zip,
+                full: result.formatted_address
+            };
 
-                    vendor.location = {
-                        type: "Point",
-                        coordinates: [lat, lng]
-                    };
-                }
+            res.locals.vendor.location = {
+                type: "Point",
+                coordinates: [lat, lng]
+            };
+        }
 
-                if(req.files.photos){
-                    vendor.photos = [];
-                    let photos = req.files.photos.length ? req.files.photos : [req.files.photos];
+        if(req.files.photos){
+            res.locals.vendor.photos = [];
+            let photos = req.files.photos.length ? req.files.photos : [req.files.photos];
 
-                    for(let i = 0; i < photos.length; i++){
-                        let fileType = photos[i].name.split(".");
-                        fileType = fileType[fileType.length-1];
-                        let fileString = `/vendor-photos/${helper.createId(25)}.${fileType}`;
+            for(let i = 0; i < photos.length; i++){
+                let fileType = photos[i].name.split(".");
+                fileType = fileType[fileType.length-1];
+                let fileString = `/vendor-photos/${helper.createId(25)}.${fileType}`;
 
-                        photos[i].mv(`${appRoot}${fileString}`).catch((err)=>{console.error(err)});
+                photos[i].mv(`${appRoot}${fileString}`).catch((err)=>{console.error(err)});
 
-                        vendor.photos.push(fileString);
-                    }
-                }
+                res.locals.vendor.photos.push(fileString);
+            }
+        }
 
-                return vendor.save();
-            })
+        res.locals.vendor.save()
             .then((vendor)=>{
                 vendor.password = undefined;
 

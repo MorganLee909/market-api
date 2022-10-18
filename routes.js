@@ -10,7 +10,7 @@ module.exports = (app)=>{
     //VENDOR
     app.get("/vendor/search", vendor.search)
     app.post("/vendor", vendor.create);
-    app.put("/vendor", vendor.update);
+    app.put("/vendor", vendorAuth, vendor.update);
     app.put("/vendor/public", vendor.publicData);
     app.put("/vendor/style", vendorAuth, vendor.updateStyle);
     app.post("/vendor/login", vendor.login);

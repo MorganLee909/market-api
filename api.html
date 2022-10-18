@@ -67,8 +67,8 @@
             <div id="updateVendorRoute" class="route">
                 <h2><span class="method">PUT:</span>/vendor</h2>
                 <p>Update vendor profile data. If photos are uploaded, then FormData must be used. When hours are entered, the numbers for open/close should be minutes since start of day. 1am = 60, 1pm = 780</p>
+                <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
-    vendor (String, required): vendor ID
     name (String, optional): new vendor name
     url (String, optional): vendor chosen url for their homepage. May only contain letters, numbers and '-'.
     email (String, optional): new vendor email
