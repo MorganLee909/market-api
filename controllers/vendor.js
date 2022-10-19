@@ -5,6 +5,7 @@ const helper = require("../helper.js");
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 module.exports = {
     /*
@@ -225,7 +226,7 @@ module.exports = {
             let geoData = await axios({
                 method: "get",
                 url: fullUrl
-            });
+            }).catch((err)=>console.error(err));
             let result = geoData.data.results[0];
             let lat = result.location.lat;
             let lng = result.location.lng;
@@ -248,19 +249,11 @@ module.exports = {
             };
         }
 
-        if(req.files.photos){
-            res.locals.vendor.photos = [];
-            let photos = req.files.photos.length ? req.files.photos : [req.files.photos];
-
-            for(let i = 0; i < photos.length; i++){
-                let fileType = photos[i].name.split(".");
-                fileType = fileType[fileType.length-1];
-                let fileString = `/vendor-photos/${helper.createId(25)}.${fileType}`;
-
-                photos[i].mv(`${appRoot}${fileString}`).catch((err)=>{console.error(err)});
-
-                res.locals.vendor.photos.push(fileString);
-            }
+        for(let i = 0; i < req.files.length; i++){
+            let file = req.files[i];
+            let newLocation = `${appRoot}/vendor-photos/${file.filename}.${file.originalname.split(".")[1]}`;
+            res.locals.vendor.photos.push(newLocation);
+            fs.rename(`${appRoot}/${file.path}`, newLocation, ()=>{});
         }
 
         res.locals.vendor.save()
