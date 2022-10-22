@@ -251,9 +251,9 @@ module.exports = {
 
         for(let i = 0; i < req.files.length; i++){
             let file = req.files[i];
-            let newLocation = `${appRoot}/vendor-photos/${file.filename}.${file.originalname.split(".")[1]}`;
+            let newLocation = `/vendor-photos/${file.filename}.${file.originalname.split(".")[1]}`;
             res.locals.vendor.photos.push(newLocation);
-            fs.rename(`${appRoot}/${file.path}`, newLocation, ()=>{});
+            fs.rename(`${appRoot}/${file.path}`, `${appRoot}${newLocation}`, ()=>{});
         }
 
         res.locals.vendor.save()
