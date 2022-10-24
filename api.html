@@ -95,8 +95,8 @@ files = {
             <div id="updatePublicDataRoute" class="route">
                 <h2><span class="method">PUT:</span>/vendor/public</h2>
                 <p>Update vendor's data that is displayed to the public</p>
+                <p>*Requires JSON web token authorization header</p>
                 <pre><code>body = {
-    vendor (String, required): vendor ID
     streetNumber (Boolean, optional): public display status of street number
     road (Boolean, optional): public display status of road
     city (Boolean, optional): public display status of city
