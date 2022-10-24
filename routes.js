@@ -19,7 +19,7 @@ module.exports = (app)=>{
     app.get("/vendor/search", vendor.search);
     app.post("/vendor", vendor.create);
     app.put("/vendor", vendorAuth, upload.array("images"), vendor.update);
-    app.put("/vendor/public", vendor.publicData);
+    app.put("/vendor/public", vendorAuth, vendor.publicData);
     app.put("/vendor/style", vendorAuth, vendor.updateStyle);
     app.post("/vendor/login", vendor.login);
     app.get("/vendor/:url", vendor.retrieve);

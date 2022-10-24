@@ -287,20 +287,15 @@ module.exports = {
     response = Vendor
     */
     publicData: function(req, res){
-        Vendor.findOne({_id: req.body.vendor})
-            .then((vendor)=>{
-                if(!vendor) throw "vendor";
+        if(req.body.streetNumber !== undefined) res.locals.vendor.publicData.streetNumber = req.body.streetNumber;
+        if(req.body.road !== undefined) res.locals.vendor.publicData.road = req.body.road;
+        if(req.body.city !== undefined) res.locals.vendor.publicData.city = req.body.city;
+        if(req.body.county !== undefined) res.locals.vendor.publicData.county = req.body.county;
+        if(req.body.state !== undefined) res.locals.vendor.publicData.state = req.body.state;
+        if(req.body.email !== undefined) res.locals.vendor.publicData.email = req.body.email;
+        if(req.body.searchable !== undefined) res.locals.vendor.publicData.searchable = req.body.searchable;
 
-                if(req.body.streetNumber !== undefined) vendor.publicData.streetNumber = req.body.streetNumber;
-                if(req.body.road !== undefined) vendor.publicData.road = req.body.road;
-                if(req.body.city !== undefined) vendor.publicData.city = req.body.city;
-                if(req.body.county !== undefined) vendor.publicData.county = req.body.county;
-                if(req.body.state !== undefined) vendor.publicData.state = req.body.state;
-                if(req.body.email !== undefined) vendor.publicData.email = req.body.email;
-                if(req.body.searchable !== undefined) vendor.publicData.searchable = req.body.searchable;
-
-                return vendor.save();
-            })
+        res.locals.vendor.save()
             .then((vendor)=>{
                 vendor.password = undefined;
 
