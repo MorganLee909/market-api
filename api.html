@@ -32,10 +32,10 @@
 
             <div id="searchVendorRoute" class="route">
                 <h2><span class="method">GET:</span>/vendor/search</h2>
-                <p>Search all vendors by location and distance. Will not show vendors that are not searchable.</p>
+                <p>Search all vendors by location and distance. Will not show vendors that are not searchable. Distance is in meters. Must convert if you want to use other type.</p>
                 <pre><code>parameters = { 
     address (required): Address to search from. Seperate spaces with '+'.
-    distance (required): Distance from address to search from.
+    distance (required): Distance from address to search from. (meters)
 }</code></pre>
                 <code>response = [Vendor]</code>
             </div>

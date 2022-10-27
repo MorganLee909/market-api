@@ -23,7 +23,7 @@ module.exports = {
         axios.get(fullUrl)
             .then((response)=>{
                 const location = [response.data.results[0].location.lat, response.data.results[0].location.lng];
-                const distance = parseFloat(req.query.distance) * 1609.344;
+                const distance = parseFloat(req.query.distance);
 
                 return Vendor.aggregate([
                     {$geoNear: {
