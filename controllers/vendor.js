@@ -42,7 +42,8 @@ module.exports = {
                         address: 1,
                         email: 1,
                         distance: 1,
-                        publicData: 1
+                        publicData: 1,
+                        url: 1
                     }}
                 ]);
             })
@@ -391,35 +392,6 @@ module.exports = {
     },
 
     /*
-    GET: retrieve data from a single vendor
-    Data may be different if there is a logged in vendor
-    req.params.url = Vendor custom url
-    response = Vendor
-    */
-    retrieve: function(req, res){
-        Vendor.findOne({url: req.params.url})
-            .then((vendor)=>{
-                let auth = req.headers["authorization"];
-
-                if(auth){
-                    const authData = jwt.verify(auth.split(" ")[1], process.env.JWT_SECRET);
-                    if(authData._id == vendor._id.toString()){
-                        vendor.password = undefined;
-                        return res.json(vendor);
-                    }
-                }
-
-                vendor = helper.removeHiddenVendorData(vendor);
-
-                return res.json(vendor);
-            })
-            .catch((err)=>{
-                console.error(err);
-                return "ERROR: unable to retrieve vendor data";
-            });
-    },
-
-    /*
     PUT: create/update/remove products from vendor
     req.body = {
         create: [{
@@ -479,6 +451,35 @@ module.exports = {
             .catch((err)=>{
                 console.error(err);
                 return res.json("ERROR: unable to update products");
+            });
+    },
+
+    /*
+    GET: retrieve data from a single vendor
+    Data may be different if there is a logged in vendor
+    req.params.url = Vendor custom url
+    response = Vendor
+    */
+    retrieve: function(req, res){
+        Vendor.findOne({url: req.params.url})
+            .then((vendor)=>{
+                let auth = req.headers["authorization"];
+
+                try{
+                    const authData = jwt.verify(auth.split(" ")[1], process.env.JWT_SECRET);
+                    if(authData._id == vendor._id.toString()){
+                        vendor.password = undefined;
+                        return res.json(vendor);
+                    }
+                }catch(e){
+                    vendor = helper.removeHiddenVendorData(vendor);
+
+                    return res.json(vendor);
+                }
+            })
+            .catch((err)=>{
+                console.error(err);
+                return "ERROR: unable to retrieve vendor data";
             });
     }
 }

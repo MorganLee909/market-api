@@ -22,8 +22,8 @@ module.exports = (app)=>{
     app.put("/vendor/public", vendorAuth, vendor.publicData);
     app.put("/vendor/style", vendorAuth, vendor.updateStyle);
     app.post("/vendor/login", vendor.login);
-    app.get("/vendor/:url", vendor.retrieve);
     app.put("/vendor/product", vendorAuth, vendor.updateProducts);
+    app.get("/vendor/:url", vendor.retrieve);
 
     //FILES
     app.get("/vendor-photos/:file", (req, res)=>res.sendFile(`${appRoot}/vendor-photos/${req.params.file}`));
