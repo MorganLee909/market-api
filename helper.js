@@ -10,7 +10,7 @@ module.exports = {
         if(!p.city) a.city = undefined;
         if(!p.county) a.county = undefined;
         if(!p.state) a.state = undefined;
-        if(!p.email) a.email = undefined;
+        if(!p.email) vendor.email = undefined;
         if(!p.searchable) a.searchable = undefined;
 
         a.country = undefined;

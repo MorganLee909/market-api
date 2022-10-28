@@ -469,12 +469,18 @@ module.exports = {
                     const authData = jwt.verify(auth.split(" ")[1], process.env.JWT_SECRET);
                     if(authData._id == vendor._id.toString()){
                         vendor.password = undefined;
-                        return res.json(vendor);
+                        return res.json({
+                            vendor: vendor,
+                            loggedIn: true
+                        });
                     }
                 }catch(e){
                     vendor = helper.removeHiddenVendorData(vendor);
 
-                    return res.json(vendor);
+                    return res.json({
+                        vendor: vendor,
+                        loggedIn: false
+                    });
                 }
             })
             .catch((err)=>{
