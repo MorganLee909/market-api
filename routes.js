@@ -4,11 +4,8 @@ const vendorAuth = require("./middleware.js").vendorAuth;
 
 const multer = require("multer");
 const upload = multer({
-    dest: "./uploads",
-    limits: {
-        fileSize: 1000 * 1000
-    }
-})
+    dest: "./uploads"
+});
 
 module.exports = (app)=>{
     //DOCS

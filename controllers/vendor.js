@@ -5,6 +5,7 @@ const helper = require("../helper.js");
 const bcrypt = require("bcryptjs");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const sharp = require("sharp");
 const fs = require("fs");
 
 module.exports = {
@@ -250,18 +251,41 @@ module.exports = {
             };
         }
 
-        for(let i = 0; i < req.files.length; i++){
-            let file = req.files[i];
-            let newLocation = `/vendor-photos/${file.filename}.${file.originalname.split(".")[1]}`;
-            res.locals.vendor.photos.push(newLocation);
-            fs.rename(`${appRoot}/${file.path}`, `${appRoot}${newLocation}`, ()=>{});
+        let promises = [res.locals.vendor.save()];
+        let originals = [];
+        if(req.files.length > 0){
+            for(let i = 0; i < res.locals.vendor.photos.length; i++){
+                fs.unlink(`${appRoot}${res.locals.vendor.photos[i]}`, (err)=>{});
+            }
+            res.locals.vendor.photos = [];
         }
 
-        res.locals.vendor.save()
-            .then((vendor)=>{
-                vendor.password = undefined;
+        for(let i = 0; i < req.files.length; i++){
+            let file = req.files[i];
 
-                return res.json(vendor);
+            let newImage = sharp(`${appRoot}/uploads/${file.filename}`)
+                .resize(1000, 750)
+                .toFormat("webp")
+                .toFile(`${appRoot}/vendor-photos/${file.filename}.webp`)
+                .catch((err)=>{
+                    console.error(err);
+                });
+
+            promises.push(newImage);
+            res.locals.vendor.photos.push(`/vendor-photos/${file.filename}.webp`);
+
+            originals.push(`${appRoot}/uploads/${file.filename}`);
+        }
+
+        Promise.all(promises)
+            .then((response)=>{
+                response[0].password = undefined;
+
+                res.json(response[0]);
+
+                for(let i = 0; i < originals.length; i++){
+                    fs.unlink(originals[i], (err)=>{console.error(err)});
+                }
             })
             .catch((err)=>{
                 switch(err){
