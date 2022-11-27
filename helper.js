@@ -1,5 +1,12 @@
 const Vendor = require("./models/vendor.js");
 
+let forbiddenUrls = [
+    "docs",
+    "docs.css",
+    "vendor",
+    "vendor-photos"
+]
+
 module.exports = {
     removeHiddenVendorData: function(vendor){
         let a = vendor.address;
@@ -26,6 +33,15 @@ module.exports = {
     },
 
     checkUrl: function(url){
+        let forbiddenUrls = [
+            "docs",
+            "docs.css"
+        ];
+
+        for(let i = 0; i < forbiddenUrls.length; i++){
+            if(forbiddenUrls[i] === url || forbiddenUrls[i] === url.toLowerCase()) return "exists";
+        }
+
         if(/^[a-zA-Z0-9-]*$/.test(url)){
             return Vendor.findOne({url: url})
                 .then((vendor)=>{
