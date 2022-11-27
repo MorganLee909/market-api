@@ -25,16 +25,17 @@ module.exports = {
             .then((response)=>{
                 const location = [response.data.results[0].location.lat, response.data.results[0].location.lng];
                 const distance = parseFloat(req.query.distance);
+                let thing = {$geoNear: {
+                    near: {
+                        type: "Point",
+                        coordinates: location
+                    },
+                    distanceField: "distance",
+                    maxDistance: distance,
+                }};
 
                 return Vendor.aggregate([
-                    {$geoNear: {
-                        near: {
-                            type: "Point",
-                            coordinates: location
-                        },
-                        distanceField: "distance",
-                        maxDistance: distance,
-                    }},
+                    thing,
                     {$match: {"publicData.searchable": true}},
                     {$project: {
                         name: 1,
@@ -56,8 +57,12 @@ module.exports = {
                 return res.json(vendors);
             })
             .catch((err)=>{
-                console.error(err);
-                return res.json("ERROR: unable to complete search");
+                if(err.response?.data?.error === "Could not geocode address. Postal code or city required."){
+                    return res.json("Invalid address, please try another address");
+                }else{
+                    console.error(err);
+                    return res.json("ERROR: unable to complete search");
+                }
             });
     },
 
