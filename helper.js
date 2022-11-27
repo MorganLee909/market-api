@@ -33,11 +33,6 @@ module.exports = {
     },
 
     checkUrl: function(url){
-        let forbiddenUrls = [
-            "docs",
-            "docs.css"
-        ];
-
         for(let i = 0; i < forbiddenUrls.length; i++){
             if(forbiddenUrls[i] === url || forbiddenUrls[i] === url.toLowerCase()) return "exists";
         }
