@@ -23,19 +23,19 @@ module.exports = {
 
         axios.get(fullUrl)
             .then((response)=>{
-                const location = [response.data.results[0].location.lat, response.data.results[0].location.lng];
+                if(response.data.results.length === 0) throw "noAddress";
+                const location = [Number(response.data.results[0].location.lat), Number(response.data.results[0].location.lng)];
                 const distance = parseFloat(req.query.distance);
-                let thing = {$geoNear: {
-                    near: {
-                        type: "Point",
-                        coordinates: location
-                    },
-                    distanceField: "distance",
-                    maxDistance: distance,
-                }};
 
                 return Vendor.aggregate([
-                    thing,
+                    {$geoNear: {
+                        near: {
+                            type: "Point",
+                            coordinates: location
+                        },
+                        distanceField: "distance",
+                        maxDistance: distance
+                    }},
                     {$match: {"publicData.searchable": true}},
                     {$project: {
                         name: 1,
@@ -59,6 +59,8 @@ module.exports = {
             .catch((err)=>{
                 if(err.response?.data?.error === "Could not geocode address. Postal code or city required."){
                     return res.json("Invalid address, please try another address");
+                }else if(err === "noAddress"){
+                    return res.json("Could not find your location, please try another");
                 }else{
                     console.error(err);
                     return res.json("ERROR: unable to complete search");
