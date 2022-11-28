@@ -27,7 +27,7 @@ module.exports = {
                 if(response.data.results.length === 0) throw "noAddress";
                 const location = [response.data.results[0].location.lng, response.data.results[0].location.lat];
                 const distance = parseFloat(req.query.distance);
-                fullAddress = response.data.results[0];
+                fullAddress = response.data.results[0].formatted_address;
 
                 return Vendor.aggregate([
                     {$geoNear: {
