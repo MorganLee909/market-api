@@ -130,6 +130,16 @@ module.exports = {
                     password: hash,
                     description: req.body.description,
                     products: [],
+                    photos: [],
+                    hours: {
+                        sunday: {open: null, close: null},
+                        monday: {open: null, close: null},
+                        tuesday: {open: null, close: null},
+                        wednesday: {open: null, close: null},
+                        thursday: {open: null, close: null},
+                        friday: {open: null, close: null},
+                        saturday: {open: null, close: null},
+                    },
                     style: {
                         mainColor: "#342628",
                         secondaryColor: "#788402",
