@@ -21,11 +21,13 @@ module.exports = {
         const address = req.query.address;
         const fullUrl = `${apiUrl}?q=${address}&api_key=${process.env.MARKET_GEOENCODE_KEY}&limit=1`;
 
+        let fullAddress = "";
         axios.get(fullUrl)
             .then((response)=>{
                 if(response.data.results.length === 0) throw "noAddress";
-                const location = [Number(response.data.results[0].location.lat), Number(response.data.results[0].location.lng)];
+                const location = [response.data.results[0].location.lng, response.data.results[0].location.lat];
                 const distance = parseFloat(req.query.distance);
+                fullAddress = response.data.results[0];
 
                 return Vendor.aggregate([
                     {$geoNear: {
@@ -54,7 +56,10 @@ module.exports = {
                     helper.removeHiddenVendorData(vendors[i]);
                 }
 
-                return res.json(vendors);
+                return res.json({
+                    vendors: vendors,
+                    address: fullAddress
+                });
             })
             .catch((err)=>{
                 if(err.response?.data?.error === "Could not geocode address. Postal code or city required."){
@@ -164,7 +169,7 @@ module.exports = {
 
                     newVendor.location = {
                         type: "Point",
-                        coordinates: [lat, lng]
+                        coordinates: [lng, lat]
                     };
                 }
 
@@ -195,7 +200,7 @@ module.exports = {
     },
 
     /*
-    POST: update vendor data
+    POST: vendor data
     req.body = {
         vendor: vendor Id, required
         name: String, optional,
