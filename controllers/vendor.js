@@ -269,7 +269,7 @@ module.exports = {
 
             res.locals.vendor.location = {
                 type: "Point",
-                coordinates: [lat, lng]
+                coordinates: [lng, lat]
             };
         }
 
