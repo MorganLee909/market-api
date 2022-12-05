@@ -36,13 +36,16 @@ if(process.env.NODE_ENV === "production"){
 
 mongoose.connect("mongodb://127.0.0.1/market", mongooseOptions);
 
+let corsOrigin = process.env.NODE_ENV === "production" ? "https://myvillage.market" : "http://localhost:5173";
+
 app.use(compression());
 app.use(express.json());
-app.use(cors({origin: "http://localhost:5173"}));
+app.use(cors({origin: corsOrigin}));
 
 require("./routes")(app);
 
 if(process.env.NODE_ENV === "production"){
-    httpsServer.listen(process.env.HTTPS_PORT);
+    module.exports = app;
+}else{
+    app.listen(process.env.PORT);
 }
-app.listen(process.env.PORT);
